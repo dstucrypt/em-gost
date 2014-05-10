@@ -90,10 +90,31 @@ err:
     return err;
 }
 
+int pbes2_decode_data(byte* data, int data_len, byte key[32], byte iv[8], byte *packed_sbox, byte *clear) {
+    int err = -1, blocks;
+
+    gost_ctx ctx;
+    gost_subst_block sbox;
+    if(packed_sbox) {
+        unpack_sbox(packed_sbox, &sbox);
+    } else {
+        unpack_sbox(default_sbox, &sbox);
+    }
+
+    blocks = (data_len + 7) / 8;
+
+    gost_init(&ctx, &sbox);
+    gost_key(&ctx, key);
+    gost_dec_cfb(&ctx, iv, data, clear, blocks);
+
+    return 0;
+}
+
 int pbes2_decode_file(int input_fd, const byte *pw, int pw_len, byte *clear) {
-    int err;
+    int err, have;
     short iter;
-    byte *salt, key[32];
+    byte *salt, key[32], iv[8], packed_sbox[64], data[512];
+
     lseek(input_fd, 38, SEEK_SET);
     salt = malloc(32);
     err = read(input_fd, salt, 32);
@@ -108,7 +129,32 @@ int pbes2_decode_file(int input_fd, const byte *pw, int pw_len, byte *clear) {
     }
     iter = ntohs(iter);
     err = pbes2_convert_password(pw, pw_len, salt, 32, iter, key);
+    if(err <0) {
+        fprintf(stderr, "failed to expand key\n");
+        return err;
+    }
 
-    return -1;
+    lseek(input_fd, 109, SEEK_SET);
+    err = read(input_fd, iv, 8);
+    if(err != 8) {
+        return -1;
+    }
+
+    lseek(input_fd, 119, SEEK_SET);
+    err = read(input_fd, packed_sbox, 64);
+    if(err != 64) {
+        return -1;
+    }
+
+    lseek(input_fd, 186, SEEK_SET);
+    have = read(input_fd, data, 512);
+    if(have < 0) {
+        fprintf(stderr, "failed to read enc data: %d\n", have);
+        return -1;
+    }
+
+    err = pbes2_decode_data(data, have, key, iv, packed_sbox, clear);
+
+    return have;
 }
 
