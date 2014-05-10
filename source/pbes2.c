@@ -86,6 +86,7 @@ int pbes2_convert_password(const byte *pw, int pw_len, const byte *salt, int sal
 
     }
 
+    err = 0;
 err:
     return err;
 }
@@ -129,7 +130,7 @@ int pbes2_decode_file(int input_fd, const byte *pw, int pw_len, byte *clear) {
     }
     iter = ntohs(iter);
     err = pbes2_convert_password(pw, pw_len, salt, 32, iter, key);
-    if(err <0) {
+    if(err != 0) {
         fprintf(stderr, "failed to expand key\n");
         return err;
     }

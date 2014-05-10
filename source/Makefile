@@ -17,7 +17,7 @@ build: uadstu.js
 	$(CC) $< -o $@ -O3 -c
 
 uadstu.js: $(OBJS)
-	 $(CC) $(OBJS) -o $@ -s EXPORTED_FUNCTIONS="['_iit_convert_password', '_iit_decode_data']" -s NO_EXIT_RUNTIME=1 -O3
+	 $(CC) $(OBJS) -o $@ -s EXPORTED_FUNCTIONS="['_iit_convert_password', '_iit_decode_data', '_pbes2_convert_password', '_pbes2_decode_data']" -s NO_EXIT_RUNTIME=1 -O3
 
 uadstu: $(OBJS)
 	$(CC) $(OBJS) -o $@
