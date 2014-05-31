@@ -74,7 +74,47 @@ int gost_key_wrap(const byte cek[CEK_SIZE], const byte kek[KEK_SIZE], const byte
 
     gost_destroy(&ctx);
 
-    memcpy(ret, result, sizeof(result));
+    memcpy(ret, result, sizeof(result) - 4);
 
     return 0;
 };
+
+int gost_key_unwrap(const byte wcek[WCEK_SIZE], const byte kek[KEK_SIZE], byte *ret) {
+    int err, idx;
+    gost_ctx ctx;
+    gost_subst_block sbox;
+    byte iv[IV_SIZE], icv[4], cekicv[40], temp1[40], temp2[44], temp3[48];
+    byte icv_check[4], iv_check[IV_SIZE];
+
+    unpack_sbox(default_sbox, &sbox);
+    gost_init(&ctx, &sbox);
+
+    gost_key(&ctx, kek);
+    gost_dec_cfb(&ctx, WRAP_IV, wcek, temp3, 6);
+
+    for(idx=0; idx < sizeof(temp2); idx++) {
+        temp2[idx] = temp3[sizeof(temp2) - idx - 1];
+    }
+
+    memcpy(iv, temp2, sizeof(iv));
+    memcpy(temp1, temp2 + sizeof(iv), sizeof(temp2) - sizeof(iv));
+
+    gost_dec_cfb(&ctx, iv, temp1, cekicv, 5);
+
+    memcpy(icv, cekicv + CEK_SIZE, 4);
+
+    err = gost_mac(&ctx, MAC_BITS, cekicv, CEK_SIZE, icv_check);
+    if(memcmp(icv, icv_check, 4)) {
+        fprintf(stderr, "CEK keysum mismatch\n");
+        err = -1;
+        goto out;
+    }
+
+    memcpy(ret, cekicv, CEK_SIZE);
+
+    err = 0;
+out:
+    gost_destroy(&ctx);
+
+    return err;
+}

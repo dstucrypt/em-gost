@@ -49,7 +49,7 @@ static byte KEK1_EXPECT[] = {
 int test_gost_key_wrap() {
     int err=0, ret=0;
 
-    byte result[48], kek[KEK_SIZE];
+    byte result[44], kek[KEK_SIZE];
 
     err = gost_kdf(ZZ1, SharedInfo, sizeof(SharedInfo), kek);
     fprintf(stderr, "kdf err: %d\n", err);
@@ -70,9 +70,20 @@ int test_gost_key_wrap() {
         ret = 1;
     }
 
-    hexdump("result", result, sizeof(result) - 4);
+    hexdump("result", result, sizeof(result));
 
     fprintf(stderr, " ret : %d\n", ret);
+
+    err = gost_key_unwrap(result, KEK2, result);
+    if(err != 0) {
+        ret = 1;
+    }
+    hexdump("unwrap", result, sizeof(CEK2));
+
+    err = memcmp(result, CEK2, sizeof(CEK2));
+    if(err != 0) {
+        fprintf(stderr, "wrap-unwrap mismatch\n");
+    }
 
     return ret;
 };
