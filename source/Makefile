@@ -9,7 +9,7 @@ else
 CC=$(EMCC)
 endif
 
-OBJS=entry.o gost89.o gosthash.o util.o sbox.o iit.o pbes2.o hash.o
+OBJS=gost89.o gosthash.o util.o sbox.o iit.o pbes2.o hash.o dstszi.o
 
 build: uadstu.js
 
@@ -19,5 +19,11 @@ build: uadstu.js
 uadstu.js: $(OBJS)
 	 $(CC) $(OBJS) -o $@ -s EXPORTED_FUNCTIONS="['_iit_convert_password', '_iit_decode_data', '_pbes2_convert_password', '_pbes2_decode_data', '_compute_hash']" -s NO_EXIT_RUNTIME=1 -O3
 
-uadstu: $(OBJS)
-	$(CC) $(OBJS) -o $@
+uadstu: entry.o $(OBJS)
+	$(CC) $< $(OBJS) -o $@
+
+test_dstszi: test_dstszi.o $(OBJS)
+	$(CC) $< $(OBJS) -o $@
+	./$@
+
+test: test_dstszi
