@@ -16,8 +16,20 @@ build: uadstu.js
 %.o: %.c
 	$(CC) $< -o $@ -O3 -c
 
+clean:
+	rm -f $(OBJS)
+
 uadstu.js: $(OBJS)
-	 $(CC) $(OBJS) -o $@ -s EXPORTED_FUNCTIONS="['_iit_convert_password', '_iit_decode_data', '_pbes2_convert_password', '_pbes2_decode_data', '_compute_hash']" -s NO_EXIT_RUNTIME=1 -O3
+	 $(CC) $(OBJS) \
+		 --post-js ./fixup.js \
+		 -o $@ \
+		 -s EXPORTED_FUNCTIONS="[ \
+				'_iit_convert_password', '_iit_decode_data', \
+				'_pbes2_convert_password', '_pbes2_decode_data', \
+				'_compute_hash', '_gost_key_wrap', '_gost_key_unwrap'\
+				]" \
+				-s 'EXPORT_NAME="emdstu"' \
+				-s NO_EXIT_RUNTIME=1 -O3
 
 uadstu: entry.o $(OBJS)
 	$(CC) $< $(OBJS) -o $@

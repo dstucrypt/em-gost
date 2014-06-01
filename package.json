@@ -1,0 +1,26 @@
+{
+  "name": "em-gost",
+  "version": "0.1.0",
+  "description": "GOST89 code from OpenSSL compiled to JS with emscripten",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "mocha --reporter spec ./test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:muromec/em-gost"
+  },
+  "keywords": [
+    "emscripten",
+    "gost89",
+  ],
+  "author": "Ilya Petrov",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/muromec/em-gost/issues"
+  },
+  "homepage": "https://github.com/muromec/em-gost/",
+  "devDependencies": {
+    "mocha": "~1.14.0"
+  }
+}
