@@ -9,7 +9,7 @@ else
 CC=$(EMCC)
 endif
 
-OBJS=gost89.o gosthash.o util.o sbox.o iit.o pbes2.o hash.o dstszi.o
+OBJS=gost89.o gosthash.o util.o sbox.o iit.o pbes2.o hash.o dstszi.o api_crypt.o
 
 build: uadstu.js
 
@@ -26,7 +26,8 @@ uadstu.js: $(OBJS)
 		 -s EXPORTED_FUNCTIONS="[ \
 				'_iit_convert_password', '_iit_decode_data', \
 				'_pbes2_convert_password', '_pbes2_decode_data', \
-				'_compute_hash', '_gost_key_wrap', '_gost_key_unwrap'\
+				'_compute_hash', '_gost_key_wrap', '_gost_key_unwrap', \
+				'_gost_crypt' \
 				]" \
 				-s 'EXPORT_NAME="emdstu"' \
 				-s NO_EXIT_RUNTIME=1 -O3

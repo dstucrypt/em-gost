@@ -74,7 +74,7 @@ int gost_key_wrap(const byte cek[CEK_SIZE], const byte kek[KEK_SIZE], const byte
 
     gost_destroy(&ctx);
 
-    memcpy(ret, result, sizeof(result) - 4);
+    memcpy(ret, result, WCEK_SIZE);
 
     return 0;
 };
