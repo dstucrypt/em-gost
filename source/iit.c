@@ -101,7 +101,11 @@ int iit_decode_data(byte* data, int data_len, byte key[32], byte mac[4], byte* c
         return -2;
     }
 
-    err = memcmp(mac, mac_check, 4);
+    err = mac[0] ^ mac_check[0];
+    err |= mac[1] ^ mac_check[1];
+    err |= mac[2] ^ mac_check[2];
+    err |= mac[3] ^ mac_check[3];
+
     if(err != 0) {
         hexdump("Expected mac: ", mac, 4);
         hexdump("Got mac: ", mac_check, 4);

@@ -104,7 +104,13 @@ int gost_key_unwrap(const byte wcek[WCEK_SIZE], const byte kek[KEK_SIZE], byte *
     memcpy(icv, cekicv + CEK_SIZE, 4);
 
     err = gost_mac(&ctx, MAC_BITS, cekicv, CEK_SIZE, icv_check);
-    if(memcmp(icv, icv_check, 4)) {
+
+    err = icv[0] ^ icv_check[0];
+    err |= icv[1] ^ icv_check[1];
+    err |= icv[2] ^ icv_check[2];
+    err |= icv[3] ^ icv_check[3];
+
+    if(err != 0) {
         fprintf(stderr, "CEK keysum mismatch\n");
         err = -1;
         goto out;
