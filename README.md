@@ -3,6 +3,8 @@ em-gost
 
 em-gost is emscripten-compiled c code and convient wrappers.
 
+[![Build Status](https://travis-ci.org/dstucrypt/em-gost.svg?branch=master)](https://travis-ci.org/dstucrypt/em-gost)
+
 Algos
 -----
 
