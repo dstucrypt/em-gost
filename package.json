@@ -1,6 +1,6 @@
 {
   "name": "em-gost",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "GOST89 code from OpenSSL compiled to JS with emscripten",
   "main": "lib/index.js",
   "scripts": {
