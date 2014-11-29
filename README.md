@@ -4,6 +4,8 @@ em-gost
 em-gost is emscripten-compiled c code and convient wrappers.
 
 [![Build Status](https://travis-ci.org/dstucrypt/em-gost.svg?branch=master)](https://travis-ci.org/dstucrypt/em-gost)
+[![npm module](https://badge.fury.io/js/em-gost.svg)](https://www.npmjs.org/package/em-gost)
+[![dependencies](https://david-dm.org/dstucrypt/em-gost.png)](https://david-dm.org/dstucrypt/em-gost)
 
 Algos
 -----
