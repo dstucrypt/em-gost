@@ -7,6 +7,8 @@ em-gost is emscripten-compiled c code and convient wrappers.
 [![npm module](https://badge.fury.io/js/em-gost.svg)](https://www.npmjs.org/package/em-gost)
 [![dependencies](https://david-dm.org/dstucrypt/em-gost.png)](https://david-dm.org/dstucrypt/em-gost)
 
+See [gost89](https://github.com/dstucrypt/gost89) for pure javascript GOST library.
+
 Algos
 -----
 
